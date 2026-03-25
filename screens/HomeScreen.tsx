@@ -14,7 +14,7 @@ import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import SettingsModal from '../components/SettingsModal';
 
 const COLORS = {
-  primary: '#2563EB',
+  primary: '#2FA2FE',
   primaryLight: '#EFF6FF',
   bg: '#FFFFFF',
   text: '#111827',
@@ -25,12 +25,21 @@ const COLORS = {
 };
 
 const SAMPLE_TRANSCRIPTION =
-  'საქართველოს მთავრობამ დღეს განაცხადა, რომ ახალი ეკონომიკური პაკეტი მომავალ კვირას განიხილება. ' +
-  'ეს გადაწყვეტილება ქვეყნის ეკონომიკური განვითარების ხელშეწყობას ისახავს მიზნად. ' +
-  'ფინანსთა სამინისტრომ აღნიშნა, რომ ბიუჯეტის გეგმა სრულად შეესაბამება საერთაშორისო სტანდარტებს. ' +
-  'ექსპერტები მიიჩნევენ, რომ ეს ნაბიჯი მნიშვნელოვანი იქნება ბიზნეს გარემოს გასაუმჯობესებლად. ' +
-  'ამასთანავე, ინვესტიციების მოზიდვის ახალი პრობლემა კვლავ განხილვის საგანია. ' +
-  'მოქალაქეები ელოდებიან კონკრეტული ნაბიჯების განხორციელებას უახლოეს მომავალში.';
+  'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძლია ჩაწეროს საუბარი და რამდენიმე წამში მიიღოს წასაკითხი ტექსტი.' +
+  'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძლია ჩაწეროს საუბარი და რამდენიმე წამში მიიღოს წასაკითხი ტექსტი.' +
+  'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძლია ჩაწეროს საუბარი და რამდენიმე წამში მიიღოს წასაკითხი ტექსტი.' +
+  'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძლია ჩაწეროს საუბარი და რამდენიმე წამში მიიღოს წასაკითხი ტექსტი.' +
+  'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძლია ჩაწეროს საუბარი და რამდენიმე წამში მიიღოს წასაკითხი ტექსტი.' +
+  'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძლია ჩაწეროს საუბარი და რამდენიმე წამში მიიღოს წასაკითხი ტექსტი.' +
+  'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძლია ჩაწეროს საუბარი და რამდენიმე წამში მიიღოს წასაკითხი ტექსტი.' +
+  'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძლია ჩაწეროს საუბარი და რამდენიმე წამში მიიღოს წასაკითხი ტექსტი.' +
+  'ტექნოლოგიები ყოველდღიურად იცვლება და ჩვენც მათთან ერთად ვვითარდებით. ზოგჯერ ერთი პატარა იდეაც კი შეიძლება გადაიქცეს' +
+  'ქსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძლია ჩაწეროს საუბარი და რამდენიმე წამში მიიღოს წასაკითხი ტექსტი.' +
+  'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძლია ჩაწეროს საუბარი და რამდენიმე წამში მიიღოს წასაკითხი ტექსტი.' +
+  'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძლია ჩაწეროს საუბარი და რამდენიმე წამში მიიღოს წასაკითხი ტექსტი.' +
+  'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძლია ჩაწეროს საუბარი და რამდენიმე წამში მიიღოს წასაკითხი ტექსტი.' +
+  'ტრანსკრიფციის სერვისი ' +
+  'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფ';
 
 export default function HomeScreen({ navigation }: any) {
   const [isRecording, setIsRecording] = useState(false);
@@ -178,8 +187,8 @@ export default function HomeScreen({ navigation }: any) {
       {/* Bottom Nav */}
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="document-outline" size={22} color={COLORS.textSecondary} />
-          <Text style={styles.navLabel}>აუდიო ფაილი</Text>
+          <MaterialIcons name="note-add" size={24} color="#767676" />
+          <Text style={[styles.navLabel, { color: '#767676' }]}>აუდიო ფაილი</Text>
         </TouchableOpacity>
 
         <View style={styles.recordBtnWrapper}>
@@ -202,7 +211,7 @@ export default function HomeScreen({ navigation }: any) {
         </View>
 
         <TouchableOpacity style={styles.navItem}>
-          <FontAwesome5 name="youtube" size={22} color={COLORS.textSecondary} />
+          <FontAwesome5 name="youtube" size={22} color="#FF0000" />
           <Text style={styles.navLabel}>YouTube Link</Text>
         </TouchableOpacity>
       </View>
@@ -343,7 +352,7 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === 'ios' ? 20 : 12,
     borderTopWidth: 1,
     borderTopColor: COLORS.border,
-    backgroundColor: COLORS.navBg,
+    backgroundColor: '#FFFFFF',
   },
   navItem: {
     alignItems: 'center',
@@ -360,24 +369,17 @@ const styles = StyleSheet.create({
   recordBtnWrapper: {
     alignItems: 'center',
     flex: 1,
-    marginTop: -20,
   },
   recordBtn: {
-    width: 68,
-    height: 68,
-    borderRadius: 34,
-    backgroundColor: COLORS.primary,
+    width: 60,
+    height: 60,
+    borderRadius: 16,
+    backgroundColor: '#4BA3F5',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    elevation: 8,
   },
   recordBtnActive: {
     backgroundColor: COLORS.recordRed,
-    shadowColor: COLORS.recordRed,
   },
 
 });
