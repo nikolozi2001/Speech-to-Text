@@ -18,7 +18,12 @@ const COLORS = {
   inputBg: '#F9FAFB',
 };
 
-function SelectField({ label, options, value, onChange }) {
+function SelectField({ label, options, value, onChange }: {
+  label: string;
+  options: string[];
+  value: string;
+  onChange: (val: string) => void;
+}) {
   const [open, setOpen] = useState(false);
   return (
     <View style={styles.fieldWrapper}>
@@ -46,7 +51,7 @@ function SelectField({ label, options, value, onChange }) {
   );
 }
 
-export default function SettingsModal({ visible, onClose }) {
+export default function SettingsModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const [language, setLanguage] = useState('ქართული (საქართველო)');
   const [model, setModel] = useState('სტანდარტული');
   const [sttProvider, setSttProvider] = useState('STT1');

@@ -7,9 +7,9 @@ import {
   ScrollView,
   Animated,
   Easing,
-  SafeAreaView,
   Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import SettingsModal from '../components/SettingsModal';
 
@@ -32,7 +32,7 @@ const SAMPLE_TRANSCRIPTION =
   'ამასთანავე, ინვესტიციების მოზიდვის ახალი პრობლემა კვლავ განხილვის საგანია. ' +
   'მოქალაქეები ელოდებიან კონკრეტული ნაბიჯების განხორციელებას უახლოეს მომავალში.';
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation }: any) {
   const [activeTab, setActiveTab] = useState('active'); // 'active' | 'history'
   const [isRecording, setIsRecording] = useState(false);
   const [hasTranscription, setHasTranscription] = useState(false);
@@ -41,7 +41,7 @@ export default function HomeScreen({ navigation }) {
 
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const waveAnim = useRef(new Animated.Value(0)).current;
-  const recordingLoop = useRef(null);
+  const recordingLoop = useRef<Animated.CompositeAnimation | null>(null);
 
   useEffect(() => {
     if (isRecording) {
