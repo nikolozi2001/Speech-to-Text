@@ -33,11 +33,9 @@ const SAMPLE_TRANSCRIPTION =
   'მოქალაქეები ელოდებიან კონკრეტული ნაბიჯების განხორციელებას უახლოეს მომავალში.';
 
 export default function HomeScreen({ navigation }: any) {
-  const [activeTab, setActiveTab] = useState('active'); // 'active' | 'history'
   const [isRecording, setIsRecording] = useState(false);
   const [hasTranscription, setHasTranscription] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [showSideMenu, setShowSideMenu] = useState(false);
 
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const waveAnim = useRef(new Animated.Value(0)).current;
@@ -111,58 +109,32 @@ export default function HomeScreen({ navigation }: any) {
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Ionicons name="mic" size={20} color={COLORS.primary} />
-          <Text style={styles.headerTitle}>  ბი ო ვარება</Text>
+          <Text style={styles.headerTitle}>ხმა  ⇄  ტექსტი</Text>
         </View>
-        <TouchableOpacity onPress={() => setShowSideMenu(!showSideMenu)} style={styles.menuBtn}>
+        <TouchableOpacity onPress={() => navigation.navigate('History')} style={styles.menuBtn}>
           <Ionicons name="menu" size={26} color={COLORS.text} />
         </TouchableOpacity>
       </View>
 
-      {/* Side menu overlay */}
-      {showSideMenu && (
-        <TouchableOpacity
-          style={styles.sideMenuOverlay}
-          activeOpacity={1}
-          onPress={() => setShowSideMenu(false)}
-        >
-          <View style={styles.sideMenu}>
-            <Text style={styles.sideMenuTitle}>მენიუ</Text>
-            <TouchableOpacity
-              style={styles.sideMenuItem}
-              onPress={() => { setShowSideMenu(false); navigation.navigate('History'); }}
-            >
-              <Ionicons name="time-outline" size={20} color={COLORS.primary} />
-              <Text style={styles.sideMenuText}>ისტორია</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.sideMenuItem}
-              onPress={() => { setShowSideMenu(false); setShowSettings(true); }}
-            >
-              <Ionicons name="settings-outline" size={20} color={COLORS.primary} />
-              <Text style={styles.sideMenuText}>პარამეტრები</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      )}
-
-      {/* Tab Buttons */}
+      {/* Action Buttons */}
       <View style={styles.tabRow}>
         <TouchableOpacity
-          style={[styles.tabBtn, activeTab === 'active' && styles.tabBtnActive]}
-          onPress={() => setActiveTab('active')}
+          style={[styles.tabBtn, styles.tabBtnActive]}
+          onPress={() => {}}
         >
-          <Text style={[styles.tabText, activeTab === 'active' && styles.tabTextActive]}>
-            აქტიური ჩანაწერი
-          </Text>
+          <View style={styles.tabBtnContent}>
+            <Ionicons name="add" size={18} color="#FFFFFF" />
+            <Text style={[styles.tabText, styles.tabTextActive]}>ახლის გახსნა</Text>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.tabBtn, activeTab === 'history' && styles.tabBtnActive]}
-          onPress={() => { setActiveTab('history'); navigation.navigate('History'); }}
+          style={styles.tabBtn}
+          onPress={() => setShowSettings(true)}
         >
-          <Text style={[styles.tabText, activeTab === 'history' && styles.tabTextActive]}>
-            გასაადმინება
-          </Text>
+          <View style={styles.tabBtnContent}>
+            <Ionicons name="settings-outline" size={18} color={COLORS.primary} />
+            <Text style={styles.tabText}>პარამეტრები</Text>
+          </View>
         </TouchableOpacity>
       </View>
 
@@ -181,11 +153,10 @@ export default function HomeScreen({ navigation }: any) {
 
         {!hasTranscription && !isRecording ? (
           <View style={styles.emptyState}>
-            <Ionicons name="mic-outline" size={64} color={COLORS.border} />
-            <Text style={styles.emptyText}>მეტყველება...</Text>
-            <Text style={styles.emptyHint}>
-              ჩასაწერად დააჭირეთ ქვემოთ მოცემულ ღილაკს
-            </Text>
+            <View style={styles.emptyRow}>
+              <Ionicons name="mic-outline" size={22} color={COLORS.primary} />
+              <Text style={styles.emptyText}>დაიწყე ჩაწერა...</Text>
+            </View>
           </View>
         ) : (
           <ScrollView
@@ -207,8 +178,8 @@ export default function HomeScreen({ navigation }: any) {
       {/* Bottom Nav */}
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="library-outline" size={22} color={COLORS.textSecondary} />
-          <Text style={styles.navLabel}>ბიბლიოთეკა</Text>
+          <Ionicons name="document-outline" size={22} color={COLORS.textSecondary} />
+          <Text style={styles.navLabel}>აუდიო ფაილი</Text>
         </TouchableOpacity>
 
         <View style={styles.recordBtnWrapper}>
@@ -278,11 +249,16 @@ const styles = StyleSheet.create({
   },
   tabBtn: {
     flex: 1,
-    paddingVertical: 8,
-    borderRadius: 8,
+    paddingVertical: 10,
+    borderRadius: 10,
     alignItems: 'center',
     borderWidth: 1.5,
     borderColor: COLORS.primary,
+  },
+  tabBtnContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   tabBtnActive: {
     backgroundColor: COLORS.primary,
@@ -300,23 +276,18 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.bg,
   },
   emptyState: {
-    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+  },
+  emptyRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 40,
+    gap: 8,
   },
   emptyText: {
-    fontSize: 20,
+    fontSize: 15,
     color: COLORS.textSecondary,
-    marginTop: 16,
-    fontWeight: '500',
-  },
-  emptyHint: {
-    fontSize: 13,
-    color: COLORS.border,
-    marginTop: 8,
-    textAlign: 'center',
-    lineHeight: 20,
+    fontWeight: '400',
   },
   waveContainer: {
     flexDirection: 'row',
@@ -408,48 +379,5 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.recordRed,
     shadowColor: COLORS.recordRed,
   },
-  sideMenuOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 100,
-  },
-  sideMenu: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 220,
-    height: '100%',
-    backgroundColor: COLORS.bg,
-    paddingTop: 60,
-    paddingHorizontal: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: -4, height: 0 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 10,
-    borderLeftWidth: 1,
-    borderLeftColor: COLORS.border,
-  },
-  sideMenuTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: COLORS.text,
-    marginBottom: 24,
-  },
-  sideMenuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
-  },
-  sideMenuText: {
-    fontSize: 15,
-    color: COLORS.text,
-    fontWeight: '500',
-  },
+
 });
