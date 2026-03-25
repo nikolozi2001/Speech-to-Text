@@ -5,10 +5,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   Platform,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
@@ -76,7 +76,14 @@ const HISTORY_DATA = [
   },
 ];
 
-function HistoryItem({ item, onCopy }) {
+interface HistoryItemData {
+  id: string;
+  text: string;
+  time: string;
+  duration: string;
+}
+
+function HistoryItem({ item, onCopy }: { item: HistoryItemData; onCopy: (text: string) => void }) {
   const preview = item.text.length > 100 ? item.text.slice(0, 100) + '...' : item.text;
   return (
     <View style={styles.item}>
@@ -96,8 +103,8 @@ function HistoryItem({ item, onCopy }) {
   );
 }
 
-export default function HistoryScreen({ navigation }) {
-  const handleCopy = (text) => {
+export default function HistoryScreen({ navigation }: any) {
+  const handleCopy = (text: string) => {
     Alert.alert('კოპირებულია', 'ტექსტი ბუფერში დაკოპირდა.');
   };
 
