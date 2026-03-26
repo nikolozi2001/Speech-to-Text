@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
 
 // Georgian flag: white background, bold red cross, 4 small red crosses in quadrants
 function GeorgianFlag({ size = 32 }: { size?: number }) {
@@ -173,7 +173,7 @@ function HistoryItem({ item, onDelete }: { item: HistoryItemData; onDelete: (id:
 
 export default function HistoryScreen({ navigation }: any) {
   const handleDelete = (id: string) => {
-    Alert.alert('წაშლა', 'ნამდვილად გსურთ წაშლა?');
+    Toast.show({ type: 'error', text1: 'წაშლა', text2: 'ჩანაწერი წაიშალა' });
   };
 
   return (
@@ -195,7 +195,7 @@ export default function HistoryScreen({ navigation }: any) {
         </View>
         <TouchableOpacity
           style={styles.langBtn}
-          onPress={() => Alert.alert('ენა', 'ენის არჩევა')}
+          onPress={() => Toast.show({ type: 'info', text1: 'ენა', text2: 'ენის არჩევა მალე დაემატება' })}
         >
           <GeorgianFlag size={32} />
           <Ionicons name="chevron-down" size={14} color={COLORS.black} style={styles.flagChevron} />
