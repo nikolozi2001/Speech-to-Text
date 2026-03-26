@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import Toast from 'react-native-toast-message';
+import Toast, { ToastType } from '../components/Toast';
 
 // Georgian flag: white background, bold red cross, 4 small red crosses in quadrants
 function GeorgianFlag({ size = 32 }: { size?: number }) {
@@ -172,12 +172,28 @@ function HistoryItem({ item, onDelete }: { item: HistoryItemData; onDelete: (id:
 }
 
 export default function HistoryScreen({ navigation }: any) {
+  const [toast, setToast] = useState<{ visible: boolean; type: ToastType; text1: string; text2?: string }>({
+    visible: false, type: 'info', text1: '',
+  });
+
+  const showToast = (type: ToastType, text1: string, text2?: string) =>
+    setToast({ visible: true, type, text1, text2 });
+
   const handleDelete = (id: string) => {
-    Toast.show({ type: 'error', text1: 'წაშლა', text2: 'ჩანაწერი წაიშალა' });
+    showToast('error', 'წაშლა', 'ჩანაწერი წაიშალა');
   };
 
   return (
     <SafeAreaView style={styles.safe}>
+      {/* Toast */}
+      <Toast
+        visible={toast.visible}
+        type={toast.type}
+        text1={toast.text1}
+        text2={toast.text2}
+        onHide={() => setToast(t => ({ ...t, visible: false }))}
+      />
+
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
@@ -195,7 +211,7 @@ export default function HistoryScreen({ navigation }: any) {
         </View>
         <TouchableOpacity
           style={styles.langBtn}
-          onPress={() => Toast.show({ type: 'info', text1: 'ენა', text2: 'ენის არჩევა მალე დაემატება' })}
+          onPress={() => showToast('info', 'ენა', 'ენის არჩევა მალე დაემატება')}
         >
           <GeorgianFlag size={32} />
           <Ionicons name="chevron-down" size={14} color={COLORS.black} style={styles.flagChevron} />
