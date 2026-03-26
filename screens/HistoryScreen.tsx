@@ -131,6 +131,7 @@ export default function HistoryScreen({ navigation }: any) {
           onPress={() => Alert.alert('ენა', 'ენის არჩევა')}
         >
           <Text style={styles.flagEmoji}>🇬🇪</Text>
+          <Ionicons name="chevron-down" size={14} color={COLORS.black} style={styles.flagChevron} />
         </TouchableOpacity>
       </View>
 
@@ -191,9 +192,15 @@ const styles = StyleSheet.create({
   langBtn: {
     marginLeft: 8,
     padding: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   flagEmoji: {
     fontSize: 28,
+  },
+  flagChevron: {
+    marginLeft: 2,
+    marginTop: 2,
   },
   premiumBadge: {
     flexDirection: 'row',
