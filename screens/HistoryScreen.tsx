@@ -10,73 +10,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import Toast, { ToastType } from '../components/Toast';
-
-// Georgian flag: white background, bold red cross, 4 small red crosses in quadrants
-function GeorgianFlag({ size = 32 }: { size?: number }) {
-  const crossThick = size * 0.18;   // thickness of the main cross arms
-  const miniSize  = size * 0.13;    // mini-cross arm length
-  const miniThick = size * 0.06;    // mini-cross arm thickness
-  const RED = '#FF0000';
-  const half = size / 2;
-  // quadrant centres (slightly inset from edge & cross)
-  const qOffset = size * 0.28;
-
-  const MiniCross = ({ cx, cy }: { cx: number; cy: number }) => (
-    <>
-      {/* horizontal arm */}
-      <View style={{
-        position: 'absolute',
-        left: cx - miniSize / 2,
-        top:  cy - miniThick / 2,
-        width: miniSize,
-        height: miniThick,
-        backgroundColor: RED,
-      }} />
-      {/* vertical arm */}
-      <View style={{
-        position: 'absolute',
-        left: cx - miniThick / 2,
-        top:  cy - miniSize / 2,
-        width: miniThick,
-        height: miniSize,
-        backgroundColor: RED,
-      }} />
-    </>
-  );
-
-  return (
-    <View style={{
-      width: size,
-      height: size,
-      backgroundColor: '#FFFFFF',
-      borderWidth: 0.5,
-      borderColor: '#CCC',
-      overflow: 'hidden',
-    }}>
-      {/* Main cross — horizontal */}
-      <View style={{
-        position: 'absolute',
-        left: 0, right: 0,
-        top: half - crossThick / 2,
-        height: crossThick,
-        backgroundColor: RED,
-      }} />
-      {/* Main cross — vertical */}
-      <View style={{
-        position: 'absolute',
-        top: 0, bottom: 0,
-        left: half - crossThick / 2,
-        width: crossThick,
-        backgroundColor: RED,
-      }} />
-      {/* 4 mini crosses in each quadrant */}
-      <MiniCross cx={half - qOffset} cy={half - qOffset} />
-      <MiniCross cx={half + qOffset} cy={half - qOffset} />
-      <MiniCross cx={half - qOffset} cy={half + qOffset} />
-      <MiniCross cx={half + qOffset} cy={half + qOffset} />
-    </View>
-  );
-}
+import FlagGeo from '../assets/images/flag_geo.svg';
 
 const COLORS = {
   bg: '#F0F0F0',
@@ -213,7 +147,7 @@ export default function HistoryScreen({ navigation }: any) {
           style={styles.langBtn}
           onPress={() => showToast('info', 'ენა', 'ენის არჩევა მალე დაემატება')}
         >
-          <GeorgianFlag size={32} />
+          <FlagGeo width={32} height={32} />
           <Ionicons name="chevron-down" size={14} color={COLORS.black} style={styles.flagChevron} />
         </TouchableOpacity>
       </View>
