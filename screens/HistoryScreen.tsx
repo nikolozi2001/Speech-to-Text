@@ -114,7 +114,7 @@ export default function HistoryScreen({ navigation }: any) {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={26} color={COLORS.white} />
+          <Ionicons name="chevron-back" size={26} color={COLORS.black} />
         </TouchableOpacity>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>A</Text>
@@ -126,6 +126,12 @@ export default function HistoryScreen({ navigation }: any) {
             <Text style={styles.premiumStar}>⭐</Text>
           </View>
         </View>
+        <TouchableOpacity
+          style={styles.langBtn}
+          onPress={() => Alert.alert('ენა', 'ენის არჩევა')}
+        >
+          <Text style={styles.flagEmoji}>🇬🇪</Text>
+        </TouchableOpacity>
       </View>
 
       {/* List */}
@@ -155,6 +161,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 14,
+    backgroundColor: '#FFFFFF',
   },
   backBtn: {
     marginRight: 10,
@@ -178,8 +185,15 @@ const styles = StyleSheet.create({
   },
   headerEmail: {
     fontSize: 14,
-    color: COLORS.white,
+    color: COLORS.black,
     fontWeight: '500',
+  },
+  langBtn: {
+    marginLeft: 8,
+    padding: 4,
+  },
+  flagEmoji: {
+    fontSize: 28,
   },
   premiumBadge: {
     flexDirection: 'row',
