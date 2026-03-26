@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -9,17 +9,18 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const COLORS = {
-  primary: '#2563EB',
-  primaryLight: '#EFF6FF',
-  bg: '#FFFFFF',
-  text: '#111827',
-  textSecondary: '#6B7280',
-  border: '#E5E7EB',
-  groupLabel: '#9CA3AF',
-  itemBg: '#F9FAFB',
+  bg: '#F0F0F0',
+  blue: '#2FA2FE',
+  black: '#000000',
+  white: '#FFFFFF',
+  overlay: '#15151599',
+  green: '#3AD2A7',
+  gray: '#949494',
+  yellowLight: '#EBEB80',
+  gold: '#FED533',
 };
 
 const HISTORY_DATA = [
@@ -28,15 +29,11 @@ const HISTORY_DATA = [
     items: [
       {
         id: '1',
-        text: 'საქართველოს მთავრობამ დღეს განაცხადა, რომ ახალი ეკონომიკური პაკეტი მომავალ კვირას განიხილება. ეს გადაწყვეტილება ქვეყნის ეკონომიკური განვითარების ხელშეწყობას ისახავს მიზნად.',
-        time: '14:32',
-        duration: '0:48',
+        text: 'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძ...',
       },
       {
         id: '2',
-        text: 'ფინანსთა სამინისტრომ აღნიშნა, რომ ბიუჯეტის გეგმა სრულად შეესაბამება საერთაშორისო სტანდარტებს. ექსპერტები მიიჩნევენ, რომ ეს ნაბიჯი მნიშვნელოვანი იქნება.',
-        time: '11:15',
-        duration: '1:02',
+        text: 'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძ...',
       },
     ],
   },
@@ -45,32 +42,46 @@ const HISTORY_DATA = [
     items: [
       {
         id: '3',
-        text: 'ინვესტიციების მოზიდვის ახალი პრობლემა კვლავ განხილვის საგანია. მოქალაქეები ელოდებიან კონკრეტული ნაბიჯების განხორციელებას უახლოეს მომავალში.',
-        time: '18:44',
-        duration: '2:15',
+        text: 'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძ...',
       },
       {
         id: '4',
-        text: 'ტბილისში გაიმართა საერთაშორისო კონფერენცია, რომელსაც 30-ზე მეტი ქვეყნის წარმომადგენელი დაესწრო.',
-        time: '15:20',
-        duration: '0:35',
-      },
-      {
-        id: '5',
-        text: 'ახალი ტექნოლოგიური სტარტაპი პრეზენტაციას მართავს. პროდუქტი მომხმარებლებს კომუნიკაციის ახალ შესაძლებლობებს სთავაზობს.',
-        time: '10:05',
-        duration: '1:28',
+        text: 'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძ...',
       },
     ],
   },
   {
-    group: '22 მარტი',
+    group: '11 მარტი',
     items: [
       {
+        id: '5',
+        text: 'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძ...',
+      },
+      {
         id: '6',
-        text: 'სპორტის სამინისტრომ განაცხადა ახალი ეროვნული პროგრამის შესახებ, რომელიც ახალგაზრდა სპორტსმენების განვითარებას ხელს შეუწყობს.',
-        time: '20:10',
-        duration: '3:00',
+        text: 'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძ...',
+      },
+    ],
+  },
+  {
+    group: 'დღეს',
+    items: [
+      {
+        id: '7',
+        text: 'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძ...',
+      },
+      {
+        id: '8',
+        text: 'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძ...',
+      },
+    ],
+  },
+  {
+    group: 'გუშინ',
+    items: [
+      {
+        id: '9',
+        text: 'ტრანსკრიფციის სერვისი ხმას ტექსტად გარდაქმნის სწრაფად და მარტივად. მომხმარებელს შეუძ...',
       },
     ],
   },
@@ -79,33 +90,23 @@ const HISTORY_DATA = [
 interface HistoryItemData {
   id: string;
   text: string;
-  time: string;
-  duration: string;
 }
 
-function HistoryItem({ item, onCopy }: { item: HistoryItemData; onCopy: (text: string) => void }) {
-  const preview = item.text.length > 100 ? item.text.slice(0, 100) + '...' : item.text;
+function HistoryItem({ item, onDelete }: { item: HistoryItemData; onDelete: (id: string) => void }) {
   return (
-    <View style={styles.item}>
-      <View style={styles.itemContent}>
-        <Text style={styles.itemText}>{preview}</Text>
-        <View style={styles.itemMeta}>
-          <Ionicons name="time-outline" size={12} color={COLORS.groupLabel} />
-          <Text style={styles.metaText}>{item.time}</Text>
-          <Ionicons name="mic-outline" size={12} color={COLORS.groupLabel} />
-          <Text style={styles.metaText}>{item.duration}</Text>
-        </View>
-      </View>
-      <TouchableOpacity style={styles.copyBtn} onPress={() => onCopy(item.text)}>
-        <Ionicons name="copy-outline" size={18} color={COLORS.primary} />
+    <View style={styles.card}>
+      <MaterialCommunityIcons name="pencil-outline" size={22} color={COLORS.blue} style={styles.editIcon} />
+      <Text style={styles.cardText} numberOfLines={2}>{item.text}</Text>
+      <TouchableOpacity onPress={() => onDelete(item.id)} hitSlop={8}>
+        <Ionicons name="trash-outline" size={22} color={COLORS.gray} />
       </TouchableOpacity>
     </View>
   );
 }
 
 export default function HistoryScreen({ navigation }: any) {
-  const handleCopy = (text: string) => {
-    Alert.alert('კოპირებულია', 'ტექსტი ბუფერში დაკოპირდა.');
+  const handleDelete = (id: string) => {
+    Alert.alert('წაშლა', 'ნამდვილად გსურთ წაშლა?');
   };
 
   return (
@@ -113,33 +114,28 @@ export default function HistoryScreen({ navigation }: any) {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={22} color={COLORS.text} />
+          <Ionicons name="chevron-back" size={26} color={COLORS.white} />
         </TouchableOpacity>
-        <Text style={styles.headerEmail}>achibiladze8777@gmail.com</Text>
-        <TouchableOpacity style={styles.addBtn}>
-          <Ionicons name="add" size={26} color={COLORS.primary} />
-        </TouchableOpacity>
-      </View>
-
-      {/* Search bar */}
-      <View style={styles.searchBar}>
-        <Ionicons name="search-outline" size={16} color={COLORS.groupLabel} />
-        <Text style={styles.searchPlaceholder}>ძიება ისტორიაში...</Text>
+        <View style={styles.avatar}>
+          <Text style={styles.avatarText}>A</Text>
+        </View>
+        <View style={styles.headerInfo}>
+          <Text style={styles.headerEmail}>achi.teruashvili777@gmail.com</Text>
+          <View style={styles.premiumBadge}>
+            <Text style={styles.premiumText}>პრემიუმი</Text>
+            <Text style={styles.premiumStar}>⭐</Text>
+          </View>
+        </View>
       </View>
 
       {/* List */}
-      <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-        {HISTORY_DATA.map((section) => (
-          <View key={section.group} style={styles.section}>
-            <Text style={styles.groupLabel}>{section.group.toUpperCase()}</Text>
-            <View style={styles.itemsCard}>
-              {section.items.map((item, idx) => (
-                <View key={item.id}>
-                  <HistoryItem item={item} onCopy={handleCopy} />
-                  {idx < section.items.length - 1 && <View style={styles.divider} />}
-                </View>
-              ))}
-            </View>
+      <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        {HISTORY_DATA.map((section, sIdx) => (
+          <View key={`${section.group}-${sIdx}`} style={styles.section}>
+            <Text style={styles.groupLabel}>{section.group}</Text>
+            {section.items.map((item) => (
+              <HistoryItem key={item.id} item={item} onDelete={handleDelete} />
+            ))}
           </View>
         ))}
         <View style={{ height: 32 }} />
@@ -157,107 +153,89 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
   },
   backBtn: {
-    padding: 4,
-    marginRight: 8,
+    marginRight: 10,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: COLORS.yellowLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  avatarText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: COLORS.black,
+  },
+  headerInfo: {
+    flex: 1,
   },
   headerEmail: {
-    flex: 1,
     fontSize: 14,
-    color: COLORS.text,
+    color: COLORS.white,
     fontWeight: '500',
-    textAlign: 'center',
   },
-  addBtn: {
-    padding: 4,
-    marginLeft: 8,
-  },
-  searchBar: {
+  premiumBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginHorizontal: 16,
-    marginVertical: 10,
-    backgroundColor: COLORS.itemBg,
+    alignSelf: 'flex-start',
+    backgroundColor: COLORS.green,
     borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: COLORS.border,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    marginTop: 4,
+    gap: 4,
   },
-  searchPlaceholder: {
-    fontSize: 14,
-    color: COLORS.groupLabel,
+  premiumText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: COLORS.white,
+  },
+  premiumStar: {
+    fontSize: 10,
   },
   scroll: {
     flex: 1,
   },
-  section: {
-    marginBottom: 16,
+  scrollContent: {
     paddingHorizontal: 16,
+    paddingTop: 8,
+  },
+  section: {
+    marginBottom: 8,
   },
   groupLabel: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: COLORS.groupLabel,
-    letterSpacing: 1,
-    marginBottom: 8,
-    marginLeft: 4,
-  },
-  itemsCard: {
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    backgroundColor: COLORS.bg,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-  },
-  itemContent: {
-    flex: 1,
-    marginRight: 10,
-  },
-  itemText: {
     fontSize: 13,
-    color: COLORS.text,
-    lineHeight: 20,
-    marginBottom: 6,
+    fontWeight: '600',
+    color: COLORS.gray,
+    marginBottom: 8,
+    marginTop: 8,
   },
-  itemMeta: {
+  card: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    backgroundColor: COLORS.white,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: COLORS.blue,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    marginBottom: 10,
   },
-  metaText: {
-    fontSize: 11,
-    color: COLORS.groupLabel,
-    marginRight: 6,
+  editIcon: {
+    marginRight: 12,
   },
-  copyBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 8,
-    backgroundColor: COLORS.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: COLORS.border,
-    marginLeft: 14,
+  cardText: {
+    flex: 1,
+    fontSize: 13,
+    color: COLORS.black,
+    lineHeight: 20,
+    marginRight: 10,
   },
 });
