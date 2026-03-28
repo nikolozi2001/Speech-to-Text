@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, FontAwesome5, Feather } from '@expo/vector-icons';
 import SettingsModal from '../components/SettingsModal';
 
 const COLORS = {
@@ -118,7 +118,9 @@ export default function HomeScreen({ navigation }: any) {
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={styles.headerTitle}>ხმა  ⇄  ტექსტი</Text>
+          <Text style={styles.headerTitle}>ხმა</Text>
+            <Ionicons name="swap-horizontal" size={18} color={COLORS.text} style={styles.headerArrows} />
+          <Text style={styles.headerTitle}>ტექსტი</Text>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate('History')} style={styles.menuBtn}>
           <Ionicons name="menu" size={26} color={COLORS.text} />
@@ -187,7 +189,7 @@ export default function HomeScreen({ navigation }: any) {
       {/* Bottom Nav */}
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem}>
-          <MaterialIcons name="note-add" size={40} color="#767676" />
+          <Feather name="file-plus" size={36} color="#767676" />
           <Text style={[styles.navLabel, { color: '#767676' }]}>აუდიო ფაილი</Text>
         </TouchableOpacity>
 
@@ -205,7 +207,7 @@ export default function HomeScreen({ navigation }: any) {
               />
             </TouchableOpacity>
           </Animated.View>
-          <Text style={[styles.navLabel, { color: isRecording ? COLORS.recordRed : COLORS.textSecondary }]}>
+          <Text style={[styles.navLabel, { color: isRecording ? COLORS.recordRed : '#767676' }]}>
             {isRecording ? 'გაჩერება' : 'ჩაწერა'}
           </Text>
         </View>
@@ -241,10 +243,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: COLORS.text,
+    fontSize: 16,
+    color: '#000000',
     fontFamily: 'BPG-Nino-Mtavruli',
+    lineHeight: 16,
+  },
+  headerArrows: {
+    marginHorizontal: 4,
   },
   menuBtn: {
     padding: 4,
@@ -366,23 +371,25 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   navLabel: {
-    fontSize: 10,
-    color: COLORS.textSecondary,
+    fontSize: 12,
+    color: '#767676',
     textAlign: 'center',
-    marginTop: 2,
+    lineHeight: 12,
     fontFamily: 'BPG-Nino-Mtavruli',
   },
   recordBtnWrapper: {
     alignItems: 'center',
     flex: 1,
+    gap: 8,
   },
   recordBtn: {
-    width: 60,
-    height: 60,
+    width: 52,
+    height: 52,
     borderRadius: 16,
     backgroundColor: '#4BA3F5',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 5.5,
   },
   recordBtnActive: {
     backgroundColor: COLORS.recordRed,
