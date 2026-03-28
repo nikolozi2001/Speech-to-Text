@@ -207,6 +207,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.black,
     fontWeight: '500',
+    fontFamily: 'BPG-Nino-Mtavruli',
   },
   langBtn: {
     marginLeft: 8,
@@ -233,6 +234,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
     color: COLORS.white,
+    fontFamily: 'BPG-Nino-Mtavruli',
   },
   premiumStar: {
     fontSize: 10,
@@ -253,6 +255,7 @@ const styles = StyleSheet.create({
     color: COLORS.gray,
     marginBottom: 8,
     marginTop: 8,
+    fontFamily: 'BPG-Nino-Mtavruli',
   },
   card: {
     flexDirection: 'row',
@@ -274,5 +277,6 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     lineHeight: 20,
     marginRight: 10,
+    fontFamily: 'BPG-Nino-Mtavruli',
   },
 });

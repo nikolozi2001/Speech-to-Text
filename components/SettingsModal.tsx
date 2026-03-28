@@ -9,14 +9,18 @@ import {
   TouchableWithoutFeedback,
   TextInput,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const COLORS = {
-  primary: "#2563EB",
-  border: "#D1D5DB",
-  text: "#111827",
-  textSecondary: "#6B7280",
+  primary: "#2079C0",
+  primaryLight: "#E0F1FF",
+  activeBorder: "#3F85DF",
+  border: "#434343",
+  text: "#000000",
+  textSecondary: "#434343",
   bg: "#FFFFFF",
-  inputBg: "#F9FAFB",
+  overlay: "rgba(116, 115, 115, 0.73)",
+  checkInactive: "rgba(72, 72, 72, 0.35)",
 };
 
 function SelectField({
@@ -33,57 +37,75 @@ function SelectField({
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
-  const filtered = searchable && search
-    ? options.filter((opt) => opt.toLowerCase().includes(search.toLowerCase()))
-    : options;
+  const filtered =
+    searchable && search
+      ? options.filter((opt) =>
+          opt.toLowerCase().includes(search.toLowerCase())
+        )
+      : options;
 
   return (
     <View style={styles.fieldWrapper}>
-      <TouchableOpacity style={styles.selectBox} onPress={() => { setOpen(!open); setSearch(""); }}>
+      <TouchableOpacity
+        style={[
+          styles.selectBox,
+          open && styles.selectBoxOpen,
+        ]}
+        onPress={() => {
+          setOpen(!open);
+          setSearch("");
+        }}
+      >
         <Text style={styles.selectText}>{value}</Text>
-        <Text style={styles.arrow}>{open ? "▲" : "▼"}</Text>
+        <Ionicons
+          name={open ? "chevron-up" : "chevron-down"}
+          size={14}
+          color={open ? COLORS.activeBorder : COLORS.border}
+        />
       </TouchableOpacity>
       {open && (
         <View style={styles.dropdown}>
           {searchable && (
             <View style={styles.searchWrapper}>
-              <TextInput
-                style={styles.searchInput}
-                placeholder="ძიება"
-                placeholderTextColor={COLORS.textSecondary}
-                value={search}
-                onChangeText={setSearch}
-                autoFocus={false}
-              />
+              <View style={styles.searchRow}>
+                <Ionicons name="search" size={14} color="#949494" />
+                <TextInput
+                  style={styles.searchInput}
+                  placeholder="ძიება"
+                  placeholderTextColor="rgba(67, 67, 67, 0.59)"
+                  value={search}
+                  onChangeText={setSearch}
+                  autoFocus={false}
+                />
+              </View>
             </View>
           )}
-          <ScrollView style={searchable ? styles.dropdownScroll : undefined} nestedScrollEnabled>
+          <ScrollView
+            style={searchable ? styles.dropdownScroll : undefined}
+            nestedScrollEnabled
+            showsVerticalScrollIndicator={false}
+          >
             {filtered.map((opt) => (
               <TouchableOpacity
                 key={opt}
-                style={[
-                  styles.dropdownItem,
-                  value === opt && styles.dropdownItemActive,
-                ]}
+                style={styles.dropdownItem}
                 onPress={() => {
                   onChange(opt);
                   setOpen(false);
                   setSearch("");
                 }}
               >
-                <Text
-                  style={[
-                    styles.dropdownText,
-                    value === opt && styles.dropdownTextActive,
-                  ]}
-                >
-                  {opt}
-                </Text>
+                <Text style={styles.dropdownText}>{opt}</Text>
               </TouchableOpacity>
             ))}
             {filtered.length === 0 && (
               <View style={styles.dropdownItem}>
-                <Text style={[styles.dropdownText, { color: COLORS.textSecondary }]}>
+                <Text
+                  style={[
+                    styles.dropdownText,
+                    { color: "rgba(67, 67, 67, 0.59)" },
+                  ]}
+                >
                   ვერ მოიძებნა
                 </Text>
               </View>
@@ -92,6 +114,32 @@ function SelectField({
         </View>
       )}
     </View>
+  );
+}
+
+function CheckOption({
+  label,
+  checked,
+  onPress,
+}: {
+  label: string;
+  checked: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <TouchableOpacity style={styles.checkOption} onPress={onPress}>
+      <View
+        style={[
+          styles.checkCircle,
+          { backgroundColor: checked ? COLORS.primary : COLORS.checkInactive },
+        ]}
+      >
+        {checked && (
+          <Ionicons name="checkmark" size={14} color="#FFFFFF" />
+        )}
+      </View>
+      <Text style={styles.checkLabel}>{label}</Text>
+    </TouchableOpacity>
   );
 }
 
@@ -106,7 +154,8 @@ export default function SettingsModal({
   const [model, setModel] = useState("მოსაუბრის გამოყოფა");
   const [sttProvider, setSttProvider] = useState("STT1");
   const [outputFormat, setOutputFormat] = useState("მიკროფონი");
-  const [punctuation, setPunctuation] = useState("პუნქტუაცია");
+  const [punctuation, setPunctuation] = useState(true);
+  const [autoCorrect, setAutoCorrect] = useState(false);
 
   return (
     <Modal
@@ -178,21 +227,17 @@ export default function SettingsModal({
             onChange={setOutputFormat}
           />
 
-          <View style={styles.fieldWrapper}>
-            <View style={styles.radioRow}>
-              {["პუნქტუაცია", "აუტოკორექტი"].map((opt) => (
-                <TouchableOpacity
-                  key={opt}
-                  style={styles.radioOption}
-                  onPress={() => setPunctuation(opt)}
-                >
-                  <View style={styles.radioCircle}>
-                    {punctuation === opt && <View style={styles.radioDot} />}
-                  </View>
-                  <Text style={styles.radioLabel}>{opt}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+          <View style={styles.checkRow}>
+            <CheckOption
+              label="პუნქტუაცია"
+              checked={punctuation}
+              onPress={() => setPunctuation(!punctuation)}
+            />
+            <CheckOption
+              label="ავტოკორექტი"
+              checked={autoCorrect}
+              onPress={() => setAutoCorrect(!autoCorrect)}
+            />
           </View>
         </ScrollView>
 
@@ -212,7 +257,7 @@ export default function SettingsModal({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.4)",
+    backgroundColor: COLORS.overlay,
   },
   sheet: {
     position: "absolute",
@@ -220,160 +265,145 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: COLORS.bg,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 32,
-    maxHeight: "80%",
+    borderTopLeftRadius: 35,
+    borderTopRightRadius: 35,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 40,
+    maxHeight: "55%",
   },
   handle: {
     width: 40,
     height: 4,
-    backgroundColor: COLORS.border,
+    backgroundColor: "#D9D9D9",
     borderRadius: 2,
     alignSelf: "center",
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: COLORS.text,
     marginBottom: 20,
-    textAlign: "center",
   },
   fieldWrapper: {
-    marginBottom: 16,
-  },
-  fieldLabel: {
-    fontSize: 13,
-    color: COLORS.textSecondary,
-    marginBottom: 6,
-    fontWeight: "500",
+    marginBottom: 12,
+    zIndex: 1,
   },
   selectBox: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: COLORS.border,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    backgroundColor: COLORS.inputBg,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    height: 35,
+    backgroundColor: COLORS.bg,
+  },
+  selectBoxOpen: {
+    borderColor: COLORS.activeBorder,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
   },
   selectText: {
-    fontSize: 14,
-    color: COLORS.text,
-  },
-  arrow: {
-    fontSize: 10,
+    fontSize: 13,
     color: COLORS.textSecondary,
+    fontFamily: "BPG-Nino-Mtavruli",
   },
   dropdown: {
-    borderWidth: 1,
+    borderWidth: 0.5,
+    borderTopWidth: 0,
     borderColor: COLORS.border,
-    borderRadius: 8,
-    marginTop: 4,
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
     backgroundColor: COLORS.bg,
     zIndex: 100,
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
   },
   searchWrapper: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     paddingTop: 8,
-    paddingBottom: 4,
+    paddingBottom: 6,
+  },
+  searchRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 0.5,
+    borderColor: "rgba(67, 67, 67, 0.32)",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    height: 30,
+    gap: 6,
   },
   searchInput: {
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    fontSize: 14,
+    flex: 1,
+    fontSize: 13,
     color: COLORS.text,
-    backgroundColor: COLORS.inputBg,
+    fontFamily: "BPG-Nino-Mtavruli",
+    paddingVertical: 0,
   },
   dropdownScroll: {
-    maxHeight: 200,
+    maxHeight: 160,
   },
   dropdownItem: {
     paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F3F4F6",
-  },
-  dropdownItemActive: {
-    backgroundColor: "#EFF6FF",
+    paddingVertical: 6,
   },
   dropdownText: {
-    fontSize: 14,
+    fontSize: 11,
     color: COLORS.text,
+    fontFamily: "BPG-Nino-Mtavruli",
+    lineHeight: 13,
   },
-  dropdownTextActive: {
-    color: COLORS.primary,
-    fontWeight: "600",
-  },
-  radioRow: {
+  checkRow: {
     flexDirection: "row",
-    gap: 24,
+    marginBottom: 12,
+    gap: 80,
   },
-  radioOption: {
+  checkOption: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 6,
   },
-  radioCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: COLORS.primary,
+  checkCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
   },
-  radioDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: COLORS.primary,
-  },
-  radioLabel: {
-    fontSize: 14,
+  checkLabel: {
+    fontSize: 12,
     color: COLORS.text,
+    fontFamily: "BPG-Nino-Mtavruli",
   },
   actions: {
     flexDirection: "row",
-    gap: 12,
-    marginTop: 24,
+    gap: 15,
+    marginTop: 20,
   },
   cancelBtn: {
     flex: 1,
-    borderWidth: 1.5,
-    borderColor: COLORS.primary,
+    height: 44,
+    backgroundColor: COLORS.primaryLight,
     borderRadius: 10,
-    paddingVertical: 13,
     alignItems: "center",
+    justifyContent: "center",
   },
   cancelText: {
     color: COLORS.primary,
-    fontSize: 15,
-    fontWeight: "600",
+    fontSize: 17,
+    fontFamily: "BPG-Nino-Mtavruli",
+    textAlign: "center",
+    lineHeight: 22,
   },
   saveBtn: {
     flex: 1,
+    height: 44,
     backgroundColor: COLORS.primary,
     borderRadius: 10,
-    paddingVertical: 13,
     alignItems: "center",
+    justifyContent: "center",
   },
   saveText: {
     color: "#FFFFFF",
-    fontSize: 15,
-    fontWeight: "600",
+    fontSize: 17,
+    fontFamily: "BPG-Nino-Mtavruli",
+    textAlign: "center",
+    lineHeight: 22,
   },
 });

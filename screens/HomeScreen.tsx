@@ -244,6 +244,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '700',
     color: COLORS.text,
+    fontFamily: 'BPG-Nino-Mtavruli',
   },
   menuBtn: {
     padding: 4,
@@ -276,6 +277,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
     color: COLORS.primary,
+    fontFamily: 'BPG-Nino-Mtavruli',
   },
   tabTextActive: {
     color: '#FFFFFF',
@@ -297,6 +299,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: COLORS.textSecondary,
     fontWeight: '400',
+    fontFamily: 'BPG-Nino-Mtavruli',
   },
   waveContainer: {
     flexDirection: 'row',
@@ -338,11 +341,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.recordRed,
     fontWeight: '600',
+    fontFamily: 'BPG-Nino-Mtavruli',
   },
   transcriptionText: {
     fontSize: 15,
     color: COLORS.text,
     lineHeight: 24,
+    fontFamily: 'BPG-Nino-Mtavruli',
   },
   bottomNav: {
     flexDirection: 'row',
@@ -365,6 +370,7 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     textAlign: 'center',
     marginTop: 2,
+    fontFamily: 'BPG-Nino-Mtavruli',
   },
   recordBtnWrapper: {
     alignItems: 'center',

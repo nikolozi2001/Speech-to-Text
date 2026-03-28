@@ -96,10 +96,12 @@ const styles = StyleSheet.create({
   text1: {
     fontSize: 14,
     fontWeight: '700',
+    fontFamily: 'BPG-Nino-Mtavruli',
   },
   text2: {
     fontSize: 12,
     marginTop: 2,
     opacity: 0.9,
+    fontFamily: 'BPG-Nino-Mtavruli',
   },
 });
