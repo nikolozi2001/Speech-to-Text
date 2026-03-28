@@ -13,6 +13,12 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import Toast, { ToastType } from '../components/Toast';
 
 const flagGeoImage = require('../assets/images/flag_geo.png');
+const flagEngImage = require('../assets/images/flag_eng.png');
+
+const LANGUAGES = [
+  { key: 'ka', label: 'ქართული', flag: flagGeoImage },
+  { key: 'en', label: 'English', flag: flagEngImage },
+];
 
 const COLORS = {
   bg: '#F0F0F0',
@@ -98,10 +104,10 @@ interface HistoryItemData {
 function HistoryItem({ item, onDelete }: { item: HistoryItemData; onDelete: (id: string) => void }) {
   return (
     <View style={styles.card}>
-      <MaterialCommunityIcons name="pencil-outline" size={22} color={COLORS.blue} style={styles.editIcon} />
+      <MaterialCommunityIcons name="pencil-outline" size={20} color={COLORS.blue} style={styles.editIcon} />
       <Text style={styles.cardText} numberOfLines={2}>{item.text}</Text>
       <TouchableOpacity onPress={() => onDelete(item.id)} hitSlop={8}>
-        <Ionicons name="trash-outline" size={22} color={COLORS.gray} />
+        <Ionicons name="trash-outline" size={22} color="#252525" />
       </TouchableOpacity>
     </View>
   );
@@ -111,6 +117,10 @@ export default function HistoryScreen({ navigation }: any) {
   const [toast, setToast] = useState<{ visible: boolean; type: ToastType; text1: string; text2?: string }>({
     visible: false, type: 'info', text1: '',
   });
+  const [selectedLang, setSelectedLang] = useState('ka');
+  const [langPickerOpen, setLangPickerOpen] = useState(false);
+
+  const currentLang = LANGUAGES.find(l => l.key === selectedLang) || LANGUAGES[0];
 
   const showToast = (type: ToastType, text1: string, text2?: string) =>
     setToast({ visible: true, type, text1, text2 });
@@ -120,7 +130,8 @@ export default function HistoryScreen({ navigation }: any) {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.outerContainer}>
+      <SafeAreaView style={styles.safe}>
       {/* Toast */}
       <Toast
         visible={toast.visible}
@@ -140,18 +151,34 @@ export default function HistoryScreen({ navigation }: any) {
         </View>
         <View style={styles.headerInfo}>
           <Text style={styles.headerEmail}>achi.teruashvili777@gmail.com</Text>
-          <View style={styles.premiumBadge}>
-            <Text style={styles.premiumText}>პრემიუმი</Text>
-            <Text style={styles.premiumStar}>⭐</Text>
+          <View style={styles.premiumRow}>
+            <View style={styles.premiumBadge}>
+              <Text style={styles.premiumText}>პრემიუმი</Text>
+              <Text style={styles.premiumStar}>⭐</Text>
+            </View>
           </View>
         </View>
-        <TouchableOpacity
-          style={styles.langBtn}
-          onPress={() => showToast('info', 'ენა', 'ენის არჩევა მალე დაემატება')}
-        >
-          <Image source={flagGeoImage} style={{ width: 32, height: 32 }} />
-          <Ionicons name="chevron-down" size={14} color={COLORS.black} style={styles.flagChevron} />
-        </TouchableOpacity>
+        <View style={styles.langWrapper}>
+          <TouchableOpacity
+            style={styles.langBtn}
+            onPress={() => setLangPickerOpen(!langPickerOpen)}
+          >
+            <Image source={currentLang.flag} style={styles.flagImage} />
+            <Ionicons name={langPickerOpen ? 'chevron-up' : 'chevron-down'} size={14} color={COLORS.black} style={styles.flagChevron} />
+          </TouchableOpacity>
+          {langPickerOpen && LANGUAGES.filter(l => l.key !== selectedLang).map(lang => (
+            <TouchableOpacity
+              key={lang.key}
+              style={styles.langOptionAbsolute}
+              onPress={() => {
+                setSelectedLang(lang.key);
+                setLangPickerOpen(false);
+              }}
+            >
+              <Image source={lang.flag} style={styles.langOptionFlag} />
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
 
       {/* List */}
@@ -167,14 +194,19 @@ export default function HistoryScreen({ navigation }: any) {
         <View style={{ height: 32 }} />
       </ScrollView>
     </SafeAreaView>
+    </View>
+
   );
 }
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
   safe: {
     flex: 1,
     backgroundColor: COLORS.bg,
-    paddingTop: Platform.OS === 'android' ? 30 : 0,
   },
   header: {
     flexDirection: 'row',
@@ -187,57 +219,82 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 27,
+    height: 27,
+    borderRadius: 14,
     backgroundColor: COLORS.yellowLight,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
   },
   avatarText: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 12,
     color: COLORS.black,
+    fontFamily: 'BPG-Nino-Mtavruli',
   },
   headerInfo: {
     flex: 1,
   },
   headerEmail: {
-    fontSize: 14,
+    fontSize: 10,
     color: COLORS.black,
-    fontWeight: '500',
-    fontFamily: 'BPG-Nino-Mtavruli',
+  },
+  langWrapper: {
+    marginLeft: 8,
+    zIndex: 10,
   },
   langBtn: {
-    marginLeft: 8,
     padding: 4,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  flagImage: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
   },
   flagChevron: {
     marginLeft: 2,
     marginTop: 2,
   },
+  langOptionAbsolute: {
+    position: 'absolute',
+    top: 44,
+    left: 4,
+    zIndex: 100,
+  },
+  langOptionFlag: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+  },
+  premiumRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 3,
+    gap: 4,
+  },
   premiumBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'flex-start',
     backgroundColor: COLORS.green,
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    marginTop: 4,
-    gap: 4,
+    borderRadius: 8,
+    paddingLeft: 10,
+    paddingRight: 14,
+    height: 13,
   },
   premiumText: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: COLORS.white,
+    fontSize: 8,
+    color: COLORS.black,
     fontFamily: 'BPG-Nino-Mtavruli',
+    lineHeight: 9,
   },
   premiumStar: {
-    fontSize: 10,
+    fontSize: 9,
+    position: 'absolute',
+    right: -5,
+    top: -4,
+    transform: [{ rotate: '15deg' }],
   },
   scroll: {
     flex: 1,
@@ -250,33 +307,35 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   groupLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: COLORS.gray,
+    fontSize: 12,
+    color: 'rgba(21, 21, 21, 0.6)',
     marginBottom: 8,
     marginTop: 8,
+    lineHeight: 12,
     fontFamily: 'BPG-Nino-Mtavruli',
   },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: COLORS.white,
-    borderRadius: 12,
-    borderWidth: 1.5,
+    borderRadius: 10,
+    borderWidth: 1,
     borderColor: COLORS.blue,
     paddingHorizontal: 14,
-    paddingVertical: 14,
-    marginBottom: 10,
+    height: 57,
+    marginBottom: 12,
+    gap: 11,
   },
   editIcon: {
-    marginRight: 12,
+    width: 24,
+    height: 24,
   },
   cardText: {
     flex: 1,
-    fontSize: 13,
+    fontSize: 10,
     color: COLORS.black,
-    lineHeight: 20,
-    marginRight: 10,
+    lineHeight: 14.5,
     fontFamily: 'BPG-Nino-Mtavruli',
   },
 });

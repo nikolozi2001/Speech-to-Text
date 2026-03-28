@@ -31,7 +31,7 @@ export default function App() {
   return (
     <SafeAreaProvider onLayout={onLayoutRootView}>
       <NavigationContainer>
-        <StatusBar style="dark" />
+        <StatusBar style="dark" translucent />
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="History" component={HistoryScreen} />

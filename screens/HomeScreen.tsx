@@ -163,7 +163,7 @@ export default function HomeScreen({ navigation }: any) {
         {!hasTranscription && !isRecording ? (
           <View style={styles.emptyState}>
             <View style={styles.emptyRow}>
-              <Ionicons name="mic-outline" size={22} color={COLORS.primary} />
+              <Ionicons name="mic" size={22} color={COLORS.primary} />
               <Text style={styles.emptyText}>დაიწყე ჩაწერა...</Text>
             </View>
           </View>
@@ -187,7 +187,7 @@ export default function HomeScreen({ navigation }: any) {
       {/* Bottom Nav */}
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem}>
-          <MaterialIcons name="note-add" size={24} color="#767676" />
+          <MaterialIcons name="note-add" size={40} color="#767676" />
           <Text style={[styles.navLabel, { color: '#767676' }]}>აუდიო ფაილი</Text>
         </TouchableOpacity>
 
@@ -211,7 +211,7 @@ export default function HomeScreen({ navigation }: any) {
         </View>
 
         <TouchableOpacity style={styles.navItem}>
-          <FontAwesome5 name="youtube" size={22} color="#FF0000" />
+          <FontAwesome5 name="youtube" size={28} color="#FF0000" />
           <Text style={styles.navLabel}>YouTube Link</Text>
         </TouchableOpacity>
       </View>

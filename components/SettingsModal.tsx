@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   TextInput,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 
 const COLORS = {
@@ -19,7 +20,7 @@ const COLORS = {
   text: "#000000",
   textSecondary: "#434343",
   bg: "#FFFFFF",
-  overlay: "rgba(116, 115, 115, 0.73)",
+  overlay: "#747373BA",
   checkInactive: "rgba(72, 72, 72, 0.35)",
 };
 
@@ -162,13 +163,16 @@ export default function SettingsModal({
       visible={visible}
       transparent
       animationType="slide"
+      statusBarTranslucent
       onRequestClose={onClose}
     >
-      <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles.overlay} />
-      </TouchableWithoutFeedback>
+      <StatusBar style="light" translucent />
+      <View style={styles.modalContainer}>
+        <TouchableWithoutFeedback onPress={onClose}>
+          <View style={styles.overlay} />
+        </TouchableWithoutFeedback>
 
-      <View style={styles.sheet}>
+        <View style={styles.sheet}>
         <View style={styles.handle} />
 
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -250,14 +254,18 @@ export default function SettingsModal({
           </TouchableOpacity>
         </View>
       </View>
+      </View>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
+  modalContainer: {
     flex: 1,
     backgroundColor: COLORS.overlay,
+  },
+  overlay: {
+    flex: 1,
   },
   sheet: {
     position: "absolute",
