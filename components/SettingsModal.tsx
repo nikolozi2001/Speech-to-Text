@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   TouchableWithoutFeedback,
+  TextInput,
 } from "react-native";
 
 const COLORS = {
@@ -22,42 +23,72 @@ function SelectField({
   options,
   value,
   onChange,
+  searchable = false,
 }: {
   options: string[];
   value: string;
   onChange: (val: string) => void;
+  searchable?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const filtered = searchable && search
+    ? options.filter((opt) => opt.toLowerCase().includes(search.toLowerCase()))
+    : options;
+
   return (
     <View style={styles.fieldWrapper}>
-      <TouchableOpacity style={styles.selectBox} onPress={() => setOpen(!open)}>
+      <TouchableOpacity style={styles.selectBox} onPress={() => { setOpen(!open); setSearch(""); }}>
         <Text style={styles.selectText}>{value}</Text>
         <Text style={styles.arrow}>{open ? "▲" : "▼"}</Text>
       </TouchableOpacity>
       {open && (
         <View style={styles.dropdown}>
-          {options.map((opt) => (
-            <TouchableOpacity
-              key={opt}
-              style={[
-                styles.dropdownItem,
-                value === opt && styles.dropdownItemActive,
-              ]}
-              onPress={() => {
-                onChange(opt);
-                setOpen(false);
-              }}
-            >
-              <Text
+          {searchable && (
+            <View style={styles.searchWrapper}>
+              <TextInput
+                style={styles.searchInput}
+                placeholder="ძიება"
+                placeholderTextColor={COLORS.textSecondary}
+                value={search}
+                onChangeText={setSearch}
+                autoFocus={false}
+              />
+            </View>
+          )}
+          <ScrollView style={searchable ? styles.dropdownScroll : undefined} nestedScrollEnabled>
+            {filtered.map((opt) => (
+              <TouchableOpacity
+                key={opt}
                 style={[
-                  styles.dropdownText,
-                  value === opt && styles.dropdownTextActive,
+                  styles.dropdownItem,
+                  value === opt && styles.dropdownItemActive,
                 ]}
+                onPress={() => {
+                  onChange(opt);
+                  setOpen(false);
+                  setSearch("");
+                }}
               >
-                {opt}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text
+                  style={[
+                    styles.dropdownText,
+                    value === opt && styles.dropdownTextActive,
+                  ]}
+                >
+                  {opt}
+                </Text>
+              </TouchableOpacity>
+            ))}
+            {filtered.length === 0 && (
+              <View style={styles.dropdownItem}>
+                <Text style={[styles.dropdownText, { color: COLORS.textSecondary }]}>
+                  ვერ მოიძებნა
+                </Text>
+              </View>
+            )}
+          </ScrollView>
         </View>
       )}
     </View>
@@ -93,6 +124,7 @@ export default function SettingsModal({
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <SelectField
+            searchable
             options={[
               "ქართული",
               "ინგლისური",
@@ -250,6 +282,24 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+  },
+  searchWrapper: {
+    paddingHorizontal: 10,
+    paddingTop: 8,
+    paddingBottom: 4,
+  },
+  searchInput: {
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    fontSize: 14,
+    color: COLORS.text,
+    backgroundColor: COLORS.inputBg,
+  },
+  dropdownScroll: {
+    maxHeight: 200,
   },
   dropdownItem: {
     paddingHorizontal: 12,
