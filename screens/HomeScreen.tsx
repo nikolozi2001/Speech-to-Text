@@ -45,6 +45,13 @@ export default function HomeScreen({ navigation }: any) {
   const [isRecording, setIsRecording] = useState(false);
   const [hasTranscription, setHasTranscription] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [recordingDuration, setRecordingDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const playbackProgress = useRef(new Animated.Value(0)).current;
+  const playbackAnim = useRef<Animated.CompositeAnimation | null>(null);
+  const recordingTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const playbackTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const waveAnim = useRef(new Animated.Value(0)).current;
@@ -95,13 +102,66 @@ export default function HomeScreen({ navigation }: any) {
     if (!isRecording) {
       setIsRecording(true);
       setHasTranscription(false);
-      setTimeout(() => {
-        setIsRecording(false);
-        setHasTranscription(true);
-      }, 3000);
+      setRecordingDuration(0);
+      setCurrentTime(0);
+      playbackProgress.setValue(0);
+      recordingTimer.current = setInterval(() => {
+        setRecordingDuration(prev => prev + 1);
+      }, 1000);
     } else {
       setIsRecording(false);
       setHasTranscription(true);
+      if (recordingTimer.current) {
+        clearInterval(recordingTimer.current);
+        recordingTimer.current = null;
+      }
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
+
+  const handlePlayPause = () => {
+    if (isPlaying) {
+      playbackAnim.current?.stop();
+      if (playbackTimer.current) {
+        clearInterval(playbackTimer.current);
+        playbackTimer.current = null;
+      }
+      setIsPlaying(false);
+    } else {
+      setIsPlaying(true);
+      const remaining = recordingDuration > 0 ? recordingDuration * 1000 * (1 - currentTime / recordingDuration) : 5000;
+      playbackTimer.current = setInterval(() => {
+        setCurrentTime(prev => {
+          if (prev >= recordingDuration) {
+            if (playbackTimer.current) clearInterval(playbackTimer.current);
+            setIsPlaying(false);
+            playbackProgress.setValue(0);
+            return 0;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+      playbackAnim.current = Animated.timing(playbackProgress, {
+        toValue: 1,
+        duration: remaining,
+        useNativeDriver: false,
+      });
+      playbackAnim.current.start(({ finished }) => {
+        if (finished) {
+          playbackProgress.setValue(0);
+          setCurrentTime(0);
+          setIsPlaying(false);
+          if (playbackTimer.current) {
+            clearInterval(playbackTimer.current);
+            playbackTimer.current = null;
+          }
+        }
+      });
     }
   };
 
@@ -185,6 +245,42 @@ export default function HomeScreen({ navigation }: any) {
           </ScrollView>
         )}
       </View>
+
+      {/* Player */}
+      {hasTranscription && !isRecording && (
+        <View style={styles.playerBar}>
+          <TouchableOpacity onPress={handlePlayPause} style={styles.playBtn}>
+            <Ionicons name={isPlaying ? 'pause' : 'play'} size={20} color="#FFFFFF" />
+          </TouchableOpacity>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressTrack}>
+              <Animated.View
+                style={[
+                  styles.progressFill,
+                  {
+                    width: playbackProgress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ['0%', '100%'],
+                    }),
+                  },
+                ]}
+              />
+              <Animated.View
+                style={[
+                  styles.progressThumb,
+                  {
+                    left: playbackProgress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ['0%', '100%'],
+                    }),
+                  },
+                ]}
+              />
+            </View>
+            <Text style={styles.playerTime}>{formatTime(currentTime)}</Text>
+          </View>
+        </View>
+      )}
 
       {/* Bottom Nav */}
       <View style={styles.bottomNav}>
@@ -360,8 +456,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     paddingTop: 10,
     paddingBottom: Platform.OS === 'ios' ? 20 : 12,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.border,
     backgroundColor: '#FFFFFF',
   },
   navItem: {
@@ -394,5 +488,48 @@ const styles = StyleSheet.create({
   recordBtnActive: {
     backgroundColor: COLORS.recordRed,
   },
-
+  playerBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    gap: 10,
+  },
+  playBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: COLORS.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  progressContainer: {
+    flex: 1,
+    gap: 4,
+  },
+  progressTrack: {
+    height: 4,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 2,
+    position: 'relative',
+  },
+  progressFill: {
+    height: 4,
+    backgroundColor: COLORS.primary,
+    borderRadius: 2,
+  },
+  progressThumb: {
+    position: 'absolute',
+    top: -4,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: COLORS.primary,
+    marginLeft: -6,
+  },
+  playerTime: {
+    fontSize: 12,
+    color: '#767676',
+    fontFamily: 'BPG-Nino-Mtavruli',
+  },
 });
